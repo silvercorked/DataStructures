@@ -26,10 +26,10 @@ namespace DataStructures {
 			return this->remove(0);
 		};
 		inline virtual bool enqueue(E item) {
-			return this->push(item);
+			return this->add(item);
 		};
 		virtual E dequeue() {
-			return this->remove(this->length - 1);
+			return this->pop();
 		};
 		inline virtual unsigned int size() {
 			return this->length;

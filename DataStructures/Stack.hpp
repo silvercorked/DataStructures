@@ -26,6 +26,7 @@ namespace DataStructures {
 			assert(this->length != UINT_MAX);
 			SingleyLinkedNode<E>* node = new SingleyLinkedNode<E>(item, this->head);
 			this->head = node;
+			this->length++;
 			return true;
 		};
 		E pop() {

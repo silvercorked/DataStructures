@@ -22,13 +22,19 @@ namespace DataStructures {
 			};
 			E peek() {
 				assert(this->length != 0);
-				return this->tail->value;
+				return this->head->value;
 			};
 			bool enqueue(E item) {
 				assert(this->length != UINT_MAX);
 				SingleyLinkedNode<E>* node = new SingleyLinkedNode<E>(item, nullptr);
-				this->tail->next = node;
-				this->tail = this->tail->next;
+				if (this->length == 0) {
+					this->head = node;
+					this->tail = node;
+				}
+				else {
+					this->tail->next = node;
+					this->tail = this->tail->next;
+				}
 				this->length++;
 				return true;
 			};
