@@ -3,36 +3,18 @@
 #include <limits.h>
 #include <assert.h>
 
-#include "AbstractList.hpp"
+#include "List.hpp"
+#include "Helpers.hpp"
 
 namespace DataStructures {
-	template <typename E>
-	class LinkedListNode { // doubley-linked
-		template <typename T>
-		friend class LinkedList;
-		protected:
-			E value;
-			LinkedListNode<E>* prev;
-			LinkedListNode<E>* next;
-		public:
-			LinkedListNode(E, LinkedListNode<E>*, LinkedListNode<E>*);
-			~LinkedListNode();
-	};
-	template <typename E>
-	LinkedListNode<E>::LinkedListNode(E item, LinkedListNode<E>* p, LinkedListNode<E>* n) {
-		this->value = item;
-		this->prev = p;
-		this->next = n;
-	}
-	template <typename E>
-	LinkedListNode<E>::~LinkedListNode() { }
+	using namespace Helpers;
 
 	template <typename E>
-	class LinkedList : public AbstractList<E, unsigned int> {
-		LinkedListNode<E>* head;
-		LinkedListNode<E>* tail;
-		unsigned int length;
-		LinkedListNode<E>* getNode(unsigned int);
+	class LinkedList : public List<E> {
+		using List<E>::length;
+		DoubleyLinkedNode<E>* head;
+		DoubleyLinkedNode<E>* tail;
+		DoubleyLinkedNode<E>* getNode(unsigned int);
 		public:
 			LinkedList();
 			bool add(E);
@@ -42,13 +24,13 @@ namespace DataStructures {
 			unsigned int indexOf(E);
 			E remove(unsigned int);
 			bool contains(E);
-			bool isEmpty();
-			E peek();
-			bool push(E);
-			E pop();
-			bool enqueue(E);
-			E dequeue();
-			unsigned int size();
+			using List<E>::isEmpty;
+			using List<E>::peek;
+			using List<E>::push;
+			using List<E>::pop;
+			using List<E>::enqueue;
+			using List<E>::dequeue;
+			using List<E>::size;
 			void clear();
 			E* toArray();
 			~LinkedList();
@@ -60,13 +42,13 @@ namespace DataStructures {
 		this->tail = nullptr;
 	}
 	template <typename E>
-	LinkedListNode<E>* LinkedList<E>::getNode(unsigned int index) {
+	DoubleyLinkedNode<E>* LinkedList<E>::getNode(unsigned int index) {
 		assert(index < this->length); // "LinkedList index out of bounds!"
 		if (index == 0) return this->head;
 		else if (index == this->length - 1) return this->tail;
 		const unsigned int half = this->length / 2;
 		unsigned int i;
-		LinkedListNode<E>* curr;
+		DoubleyLinkedNode<E>* curr;
 		if (index <= half) {
 			i = 1;
 			curr = this->head->next;
@@ -87,7 +69,7 @@ namespace DataStructures {
 	bool LinkedList<E>::add(E item) {
 		if (this->length == UINT_MAX)
 			return false;
-		LinkedListNode<E>* n = new LinkedListNode<E>(item, this->tail, nullptr);
+		DoubleyLinkedNode<E>* n = new DoubleyLinkedNode<E>(item, this->tail, nullptr);
 		if (this->length == 0) {
 			this->head = n;
 			this->tail = n;
@@ -100,16 +82,12 @@ namespace DataStructures {
 		return true;
 	}
 	template <typename E>
-	E LinkedList<E>::get(unsigned int index) {
-		return this->getNode(index)->value;
-	}
-	template <typename E>
 	bool LinkedList<E>::insert(unsigned int index, E item) {
 		if (this->size() == index) return this->add(item);
-		LinkedListNode<E>* n = this->getNode(index);
+		DoubleyLinkedNode<E>* n = this->getNode(index);
 		if (n->next != nullptr)
 			assert(n == n->next->prev);
-		LinkedListNode<E>* curr = new LinkedListNode<E>(item, n->prev, n);
+		DoubleyLinkedNode<E>* curr = new DoubleyLinkedNode<E>(item, n->prev, n);
 		if (index == 0)
 			this->head = curr;
 		n->prev = curr;
@@ -122,8 +100,23 @@ namespace DataStructures {
 		return true;
 	}
 	template <typename E>
+	E LinkedList<E>::get(unsigned int index) {
+		return this->getNode(index)->value;
+	}
+	template <typename E>
+	unsigned int LinkedList<E>::indexOf(E item) {
+		unsigned int index = 0;
+		DoubleyLinkedNode<E>* temp = this->head;
+		while (temp != nullptr && temp->value != item) {
+			temp = temp->next;
+			index++;
+		}
+		if (temp == nullptr) return -1; // if broke while cause nullptr, then return -1 as index.
+		else return index; // otherwise, must have broke because item was the same, in which case, return index
+	};
+	template <typename E>
 	E LinkedList<E>::remove(unsigned int index) {
-		LinkedListNode<E>* curr = this->getNode(index);
+		DoubleyLinkedNode<E>* curr = this->getNode(index);
 		bool wasTail = index == this->length - 1;
 		bool wasHead = index == 0;
 		if (wasTail || wasHead) {
@@ -149,12 +142,8 @@ namespace DataStructures {
 		return item;
 	}
 	template <typename E>
-	bool LinkedList<E>::isEmpty() {
-		return this->length == 0;
-	}
-	template <typename E>
 	bool LinkedList<E>::contains(E item) {
-		LinkedListNode<E>* curr = this->head;
+		DoubleyLinkedNode<E>* curr = this->head;
 		unsigned int i = 0;
 		while (i < this->length && curr->value != item) {
 			i++;
@@ -166,34 +155,26 @@ namespace DataStructures {
 			return true;
 	}
 	template <typename E>
-	E LinkedList<E>::peek() {
-		assert(!this->isEmpty()); // "LinkedList is empty! Nothing to peek at!"
-		return this->head->value;
+	void LinkedList<E>::clear() {
+		while (this->head != nullptr) {
+			this->tail = this->head->next;
+			delete this->head;
+			this->head = this->tail;
+		}
+		this->length = 0;
 	}
 	template <typename E>
-	inline bool LinkedList<E>::push(E item) {
-		return this->insert(0, item);
+	E* LinkedList<E>::toArray() {
+		E* arr = new E[this->length];
+		unsigned int index = 0;
+		DoubleyLinkedNode<E>* temp = this->head;
+		while (temp != nullptr) {
+			arr[index] = temp->value;
+			temp = temp->next;
+			index++;
+		}
+		return arr;
 	}
-	template <typename E>
-	inline E LinkedList<E>::pop() {
-		return this->remove(0);
-	}
-	template <typename E>
-	inline bool LinkedList<E>::enqueue(E item) {
-		return this->push(item);
-	}
-	template <typename E>
-	inline E LinkedList<E>::dequeue() {
-		return this->remove(this->length - 1);
-	}
-	template <typename E>
-	inline unsigned int LinkedList<E>::size() {
-		return this->length;
-	}
-	//template <typename E>
-	//E* LinkedList<E>::toArray() {
-//
-	//}
 	template <typename E>
 	LinkedList<E>::~LinkedList() {
 		while (this->head != nullptr) {

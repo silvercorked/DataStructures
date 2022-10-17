@@ -3,13 +3,13 @@ Done:
 
 Ready for Tests:
 LinkedList
-
-In Progress:
 ArrayList
-
-To Do:
 Queue
 Stack
+
+In Progress:
+
+To Do:
 Heap/Priority Queue
 Hashmap
 Binary Tree

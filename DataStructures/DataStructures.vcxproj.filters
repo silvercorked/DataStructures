@@ -26,16 +26,28 @@
     <ClInclude Include="AbstractList.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ArrayList.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="List.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AbstractCollection.hpp">
+    <ClInclude Include="AbstractBag.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Iterator.hpp">
+    <ClInclude Include="AbstractStack.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ArrayList.hpp">
+    <ClInclude Include="AbstractQueue.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stack.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Queue.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Helpers.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
