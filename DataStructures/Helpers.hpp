@@ -33,5 +33,12 @@ namespace DataStructures {
 		}
 		template <typename E>
 		DoubleyLinkedNode<E>::~DoubleyLinkedNode() {}
+		template <typename E>
+		struct BinaryTreeNode : public DoubleyLinkedNode<E> {
+			BinaryTreeNode(E item, BinaryTreeNode<E>* left, BinaryTreeNode<E>* right)
+				: DoubleyLinkedNode(item, left, right) {
+			};
+			~BinaryTreeNode() {};
+		};
 	};
 };

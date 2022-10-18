@@ -145,12 +145,17 @@
     <ClInclude Include="AbstractBag.hpp" />
     <ClInclude Include="AbstractList.hpp" />
     <ClInclude Include="AbstractQueue.hpp" />
+    <ClInclude Include="AbstractSet.hpp" />
     <ClInclude Include="AbstractStack.hpp" />
+    <ClInclude Include="AbstractTree.hpp" />
+    <ClInclude Include="AbstractTreeSet.hpp" />
     <ClInclude Include="ArrayList.hpp" />
+    <ClInclude Include="BinaryTree.hpp" />
     <ClInclude Include="Helpers.hpp" />
     <ClInclude Include="LinkedList.hpp" />
     <ClInclude Include="List.hpp" />
     <ClInclude Include="Queue.hpp" />
+    <ClInclude Include="Set.hpp" />
     <ClInclude Include="Stack.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

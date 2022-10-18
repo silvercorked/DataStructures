@@ -6,12 +6,14 @@
 #include "ArrayList.hpp"
 #include "Stack.hpp"
 #include "Queue.hpp"
+#include "Set.hpp"
 
 using namespace DataStructures;
 
 void testStack(Stack<int>*);
 void testQueue(Queue<int>*);
 void testList(List<int>*, std::string);
+void testSet(Set<int>*);
 
 void testAdd(List<int>*);
 void testInsert(List<int>*);
@@ -39,16 +41,29 @@ void testListEnqueue(List<int>*);
 void testQueueDequeue(Queue<int>*);
 void testListDequeue(List<int>*);
 
+void testSetAdd(Set<int>*);
+void testSetContains(Set<int>*);
+void testSetFirst(Set<int>*);
+void testSetLast(Set<int>*);
+void testSetDiscard(Set<int>*);
+void testSetPeek(Set<int>*);
+void testSetIsEmpty(Set<int>*);
+void testSetSize(Set<int>*);
+void testSetClear(Set<int>*);
+void testSetToArray(Set<int>*);
+
 int main() {
 	std::cout << "hello world" << std::endl;
 	List<int>* l = new LinkedList<int>();
 	List<int>* a = new ArrayList<int>();
 	Stack<int>* s = new Stack<int>();
 	Queue<int>* q = new Queue<int>();
+	Set<int>* set = new Set<int>();
 	testList(l, "linkedlist");
 	testList(a, "arraylist");
 	testStack(s);
 	testQueue(q);
+	testSet(set);
 	return 0;
 }
 
@@ -84,6 +99,19 @@ void testStack(Stack<int>* s) {
 	testStackPeek(s);
 	testStackPop(s);
 	std::cout << "Stack looking good." << std::endl;
+}
+void testSet(Set<int>* s) {
+	testSetAdd(s);
+	testSetContains(s);
+	testSetFirst(s);
+	testSetLast(s);
+	testSetDiscard(s);
+	testSetPeek(s);
+	testSetIsEmpty(s);
+	testSetSize(s);
+	testSetClear(s);
+	testSetToArray(s);
+	std::cout << "Set looking good." << std::endl;
 }
 
 void testAdd(List<int>* l) {
@@ -351,3 +379,106 @@ void testListDequeue(List<int>* q) {
 	}
 	assert(q->isEmpty());
 };
+void testSetAdd(Set<int>* s) {
+	assert(s->add(5));
+	assert(!s->add(5));
+	assert(s->add(6));
+	assert(s->discard(5));
+	assert(s->discard(6));
+	for (int i = 0; i < 100; i++)
+		assert(s->add(i));
+	for (int i = 0; i < 100; i++)
+		assert(s->discard(i));
+}
+void testSetContains(Set<int>* s) {
+	assert(s->add(5));
+	assert(s->contains(5));
+	assert(!s->contains(6));
+	assert(s->add(6));
+	assert(s->contains(6));
+	assert(s->discard(5));
+	assert(s->discard(6));
+	assert(!s->contains(5) && !s->contains(6));
+}
+void testSetFirst(Set<int>* s) {
+	assert(s->add(5));
+	assert(s->first() == 5);
+	assert(s->add(6));
+	assert(s->first() == 5);
+	assert(s->discard(5));
+	assert(s->first() == 6);
+	assert(s->discard(6));
+}
+void testSetLast(Set<int>* s) {
+	assert(s->add(5));
+	assert(s->last() == 5);
+	assert(s->add(6));
+	assert(s->last() == 6);
+	assert(s->discard(5));
+	assert(s->last() == 6);
+	assert(s->discard(6));
+}
+void testSetDiscard(Set<int>* s) {
+	assert(!s->discard(5));
+	assert(s->add(5));
+	assert(s->discard(5));
+	assert(!s->discard(5));
+	for (int i = 0; i < 100; i++)
+		assert(s->add(i));
+	for (int i = 99; i >= 0; i--)
+		assert(s->discard(i));
+	assert(s->isEmpty());
+}
+void testSetPeek(Set<int>* s) {
+	assert(s->add(5));
+	assert(s->first() == 5);
+	assert(s->add(6));
+	assert(s->first() == 5);
+	assert(s->discard(5));
+	assert(s->first() == 6);
+	assert(s->discard(6));
+}
+void testSetIsEmpty(Set<int>* s) {
+	assert(s->isEmpty());
+	assert(s->add(5));
+	assert(!s->isEmpty());
+	assert(s->discard(5));
+	assert(s->isEmpty());
+}
+void testSetSize(Set<int>* s) {
+	assert(s->size() == 0);
+	assert(s->add(5));
+	assert(s->size() == 1);
+	for (int i = 0; i < 100; i++) {
+		assert(i <= 5 ? s->size() == i + 1 : s->size() == i);
+		assert(i == 5 ? !s->add(i) : s->add(i));
+	}
+	for (int i = 0; i < 100; i++)
+		assert(s->discard(i));
+	assert(s->size() == 0 && s->isEmpty());
+}
+void testSetClear(Set<int>* s) {
+	assert(s->size() == 0);
+	s->clear();
+	assert(s->size() == 0);
+	for (int i = 0; i < 100; i++)
+		assert(s->add(i));
+	s->clear();
+	assert(s->size() == 0 && s->isEmpty());
+}
+void testSetToArray(Set<int>* s) {
+	int* t = s->toArray(); // set should be empty, so if this works, this compiler has an extension, according to a stack overflow post
+	delete[] t;
+	s->add(5);
+	t = s->toArray();
+	assert(t[0] == 5);
+	delete[] t;
+	s->add(10);
+	assert(s->size() == 2);
+	t = s->toArray();
+	assert(t[0] == 5);
+	assert(t[1] == 10);
+	delete[] t;
+	s->clear();
+	assert(s->isEmpty());
+}

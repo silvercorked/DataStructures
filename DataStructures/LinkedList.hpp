@@ -134,6 +134,7 @@ namespace DataStructures {
 			}
 		}
 		else {
+			curr->next->prev = curr->prev;
 			curr->prev->next = curr->next;
 		}
 		this->length--;
